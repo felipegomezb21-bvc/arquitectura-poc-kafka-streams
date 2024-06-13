@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TradeOrderSimulatorApplication",
+            "request": "launch",
+            "mainClass": "com.example.trade_order_simulator.TradeOrderSimulatorApplication",
+            "projectName": "trade-order-simulator"
+        },
+        {
+            "type": "java",
             "name": "ProducerApplication",
             "request": "launch",
             "mainClass": "com.example.producer.ProducerApplication",

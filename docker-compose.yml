@@ -49,4 +49,16 @@ services:
       KAFKA_CLUSTERS_0_SASL_PASSWORD: password
     healthcheck:
       test: "curl -f http://localhost:8080 || exit 1"
+
+# Redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
  

@@ -1,5 +1,7 @@
 package com.example.producer.actor;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,9 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ActorController {
     private final ActorProducer producer;
+    private final ValueOperations<String, String> valueOps;
 
-    public ActorController(ActorProducer producer) {
+
+    public ActorController(ActorProducer producer, StringRedisTemplate redisTemplate) {
         this.producer = producer;
+        this.valueOps = redisTemplate.opsForValue();
     }
 
     @PostMapping("/actors")
@@ -21,6 +26,14 @@ public class ActorController {
             actor.setEmail("actor" + i + "@example.com");
             producer.sendMessage(actor);
         }
+
+        String totalStr = valueOps.get("MaxActors");
+        int currentTotal = totalStr != null ? Integer.parseInt(totalStr) : 0;
+
+        if (total > currentTotal) {
+            valueOps.set("MaxActors", String.valueOf(total));
+        }
+
         return "Actors created";
     }
 }
