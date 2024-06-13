@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ProducerApplication",
+            "request": "launch",
+            "mainClass": "com.example.producer.ProducerApplication",
+            "projectName": "producer"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ParticipantProducerApplication<participant-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.participant_producer.ParticipantProducerApplication",
+            "projectName": "participant-producer",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

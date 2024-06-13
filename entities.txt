@@ -1,0 +1,44 @@
+{
+  "trade": {
+    "id": 1,
+    "matchId": 1,
+    "side": "BUY",
+    "date": "2022-01-01",
+    "quantity": 100,
+    "price": 50.0,
+    "orderid": 1
+    "actorId": 1,
+    "participantId": 1,
+  }
+}
+{
+  "order": {
+    "id": 1,
+    "status": "OPEN",
+    "type": "BUY",
+    "quantity": 100,
+    "price": 50.0,
+    "assetId": 1,
+  }
+}
+{
+  "actor": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "johndoe@example.com"
+  }
+}
+{
+  "participant": {
+    "id": 1,
+    "name": "Participant 1",
+  }
+}
+{
+"asset": {
+    "id": 1,
+    "name": "Asset 1",
+    "type": "STOCK",
+    "price": 50.0
+  }
+}
