@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "KafkaStreamsJoinApp",
+            "request": "launch",
+            "mainClass": "com.example.all_streams.KafkaStreamsJoinApp",
+            "projectName": "all-streams"
+        },
+        {
+            "type": "java",
             "name": "TradeOrderSimulatorApplication",
             "request": "launch",
             "mainClass": "com.example.trade_order_simulator.TradeOrderSimulatorApplication",

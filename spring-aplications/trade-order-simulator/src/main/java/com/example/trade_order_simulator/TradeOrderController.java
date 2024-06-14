@@ -47,7 +47,6 @@ public class TradeOrderController {
             buyerTrade.setId(UUID.randomUUID().toString());
             buyerTrade.setMatchId(UUID.randomUUID().toString());
             buyerTrade.setSide("BUY");
-            buyerTrade.setDate(java.time.LocalDate.now());
             buyerTrade.setQuantity(100);
             buyerTrade.setPrice(50.0);
             buyerTrade.setOrderId(buyOrder.getId());
@@ -59,7 +58,6 @@ public class TradeOrderController {
             sellerTrade.setId(UUID.randomUUID().toString());
             sellerTrade.setMatchId(buyerTrade.getMatchId());
             sellerTrade.setSide("SELL");
-            sellerTrade.setDate(java.time.LocalDate.now());
             sellerTrade.setQuantity(100);
             sellerTrade.setPrice(50.0);
             sellerTrade.setOrderId(sellOrder.getId());

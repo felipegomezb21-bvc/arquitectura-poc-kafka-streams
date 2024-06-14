@@ -1,4 +1,4 @@
-package com.example.trade_order_simulator;
+package com.example.all_streams;
 
 public class Trade {
     private String id;
