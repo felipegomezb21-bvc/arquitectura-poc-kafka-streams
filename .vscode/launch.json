@@ -4,6 +4,13 @@
             "type": "java",
             "name": "KafkaStreamsJoinApp",
             "request": "launch",
+            "mainClass": "com.example.all_streams_many_builder.KafkaStreamsJoinApp",
+            "projectName": "com.example-all-streams"
+        },
+        {
+            "type": "java",
+            "name": "KafkaStreamsJoinApp",
+            "request": "launch",
             "mainClass": "com.example.all_streams.KafkaStreamsJoinApp",
             "projectName": "all-streams"
         },

@@ -70,7 +70,7 @@ public class TradeOrderController {
 
     private int generateRandomIndex(String key) {
         String totalStr = valueOps.get(key);
-        int randomIndex = totalStr != null ? new Random().nextInt(Integer.parseInt(totalStr)): new Random().nextInt(100) ;
+        int randomIndex = totalStr != null ? 1 + new Random().nextInt(Integer.parseInt(totalStr) - 1): 1 + new Random().nextInt(10) ;
         
         return randomIndex;
     }

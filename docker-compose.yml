@@ -10,6 +10,8 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     healthcheck:
       test: "echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT"
+    networks:
+      - network-streams
 
   kafka:
     image: confluentinc/cp-kafka:7.5.3
@@ -27,6 +29,28 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
+    networks:
+      - network-streams
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+        reservations:
+          cpus: '0.5'
+          memory: 1024M
+
+  kafka-setup:
+    image: confluentinc/cp-kafka:7.5.3
+    container_name: kafka-setup
+    depends_on:
+      kafka:
+        condition: service_started
+    volumes:
+      - ./container-create-kafka-topics.sh:/container-create-kafka-topics.sh
+    command: ["sh", "/container-create-kafka-topics.sh"]
+    networks:
+      - network-streams
 
     
 # Kafka UI
@@ -49,6 +73,9 @@ services:
       KAFKA_CLUSTERS_0_SASL_PASSWORD: password
     healthcheck:
       test: "curl -f http://localhost:8080 || exit 1"
+    networks:
+      - network-streams
+    
 
 # Redis
   redis:
@@ -61,4 +88,121 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
- 
+    networks:
+      - network-streams
+
+
+# Application 1
+  producer-app:
+    build:
+      context: ./spring-aplications/producer
+      dockerfile: Dockerfile
+    container_name: producer-app
+    restart: unless-stopped
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+      - redis
+    networks:
+      - network-streams
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+
+# Application 2
+  trade-order-simulator-app:
+    build:
+      context: ./spring-aplications/trade-order-simulator
+      dockerfile: Dockerfile
+    container_name: trade-order-simulator-app
+    restart: unless-stopped
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - redis
+    networks:
+      - network-streams
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+# Application 3
+  all-streams-app:
+    build:
+      context: ./spring-aplications/all-streams
+      dockerfile: Dockerfile
+    container_name: all-streams-app
+    restart: unless-stopped
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8084:8084"
+    depends_on:
+      - kafka
+      - kafka-setup
+      - redis
+    networks:
+      - network-streams
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+# Application 4
+  all-streams-many-builder-app:
+    build:
+      context: ./spring-aplications/all-streams-many-builder
+      dockerfile: Dockerfile
+    container_name: all-streams-many-builder-app
+    restart: unless-stopped
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8085:8085"
+    depends_on:
+      - kafka
+      - kafka-setup
+      - redis
+    networks:
+      - network-streams
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  network-streams:
+    driver: bridge
